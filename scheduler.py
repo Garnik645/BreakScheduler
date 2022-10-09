@@ -2,8 +2,23 @@ import argparse
 import sys
 import json
 
-def get_one_break():
-    pass
+
+class Break:
+    HOUR_TO_SECONDS = 3600
+    MINUTE_TO_SECONDS = 60
+    
+    @classmethod
+    def convert_time_to_seconds(cls, time):
+        split_time = time.split()
+        return int(split_time[0]) * cls.HOUR_TO_SECONDS + \
+        int(split_time[1]) * cls.MINUTE_TO_SECONDS + int(split_time[2])
+    
+    def __init__(self, json_template):
+        self.start_times = []
+        self.duration = int(json_template['break_duration']) * self.MINUTE_TO_SECONDS
+        self.is_relative_to_start = True if json_template['start_time_type'] == 'RELATIVE_TO_CLASS_START' else False
+        for start_time in json_template['start_times']:
+            self.start_times.append(self.convert_time_to_seconds(start_time))
 
 
 def read_from_json(args):
@@ -12,15 +27,7 @@ def read_from_json(args):
         span_data = json_data[args.span_id]
         breaks = []
         for template in span_data:
-            breaks.append(get_one_break(template))
-
-
-def convert_time_to_seconds(time):
-    HOUR_TO_SECONDS = 3600
-    MINUTE_TO_SECONDS = 60
-    split_time = time.split()
-    return int(split_time[0]) * HOUR_TO_SECONDS + \
-        int(split_time[1]) * MINUTE_TO_SECONDS + int(split_time[2])
+            breaks.append(Break(template))
 
 
 def parse_args(argv):
