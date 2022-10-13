@@ -1,8 +1,10 @@
 import argparse
 import sys
 import os
+import re
 import json
 
+"""
 
 class BreakTemplate:
     HOUR_TO_SECONDS = 3600
@@ -54,21 +56,38 @@ class Domain:
                 template_obj = BreakTemplate(template_json)
                 intervals = template_obj.get_break_intervals(self.args.start_time, self.args.end_time)
                 self.break_intervals.append(intervals)
+"""
+
+def is_time_valid(time_string):
+    if len(time_string) != len("HH:MM:SS"):
+        return False
+    
+    time_exp = re.compile("[0-2][0-9]:[0-5][0-9]:[0-5][0-9]")
+    if time_exp.match(time_string) is None:
+        return False
+    
+    hour = int(time_string[0:2])
+    if hour >= 24:
+        return False
+    
+    return True
+    
 
 
-# todo check time format
 def check_args(args):
     if not os.path.isfile(args.data_path):
-        raise FileNotFoundError("File with path {} wasn't found!".format(args.data_path))
+        raise FileNotFoundError(f"File with path {args.data_path} wasn't found!")
+    for time_arg in [args.start_time, args.end_time]:
+        if not is_time_valid(time_arg):
+            raise ValueError(f"argument '{time_arg}' has invalid time format! Valid example is 23:59:59.")
 
 
 def parse_args(argv):
-    parser = argparse.ArgumentParser(
-        description='Break scheduler for university classes')
+    parser = argparse.ArgumentParser(description='Break scheduler for university classes')
     
     required_args = {
-        '--start-time': 'Start time for classes, in this format - HH:MM:SS',
-        '--end-time': 'End time for classes, in this format - HH:MM:SS',
+        '--start-time': 'Start time for classes, in the following format - HH:MM:SS',
+        '--end-time': 'End time for classes, in the following format - HH:MM:SS',
         '--data-path': 'Path to data.json file',
         '--span-id': 'Break template id in data.json file'
     }
@@ -82,9 +101,7 @@ def parse_args(argv):
 
 
 def main(args):
-    domain = Domain(args)
-    domain.collect_template_intervals()
-    print(domain.break_intervals)
+    pass
 
 
 if __name__ == '__main__':
