@@ -13,5 +13,5 @@ class DomainConstructor:
     def remove_invalid_domains(self):
         pass
     
-    def get_domain(self, dist_lower_bound_sec):
+    def get_domains(self, dist_lower_bound_sec):
         pass
