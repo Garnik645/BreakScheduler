@@ -66,7 +66,7 @@ def main(args):
     initial_condition = 2 * BreakTemplateParser.HOUR_TO_SECONDS
     result = []
     while not result and initial_condition >= 0:
-        result = cons.get(initial_condition)
+        result = cons.get_domains(initial_condition)
         initial_condition -= 15 * BreakTemplateParser.MINUTE_TO_SECONDS
     
     print(result)

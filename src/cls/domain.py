@@ -1,3 +1,4 @@
+import enum
 from cls.template import BreakTemplateParser
 from itertools import product
 
@@ -9,13 +10,13 @@ class DomainConstructor:
             parser = BreakTemplateParser(template_json, class_begin_time, class_end_time)
             templates.append(parser.construct_valid_interval_list())
         self.domains = list(product(*templates))
-        for domain in self.domains:
-            sorted(domain, key=lambda interval: interval.begin_sec)
+        for i, domain in enumerate(self.domains):
+            self.domains[i] = sorted(domain)
 
     @staticmethod
     def is_domain_valid(domain):
         for i in range(0, len(domain) - 1):
-            if domain[i].end_sec > domain[i + 1].begin_sec:
+            if domain[i].end > domain[i + 1].begin:
                 return False
         return True    
 
@@ -23,7 +24,7 @@ class DomainConstructor:
     def min_break_dist(domain):
         result = float('inf')
         for i in range(0, len(domain) - 1):
-            result = min(result, domain[i + 1].begin_sec - domain[i].end_sec)
+            result = min(result, domain[i + 1].begin - domain[i].end)
         return result
 
     def remove_invalid_domains(self):
@@ -32,7 +33,7 @@ class DomainConstructor:
                 del self.domains[i]
                 
     def sort_domains(self):
-        sorted(self.domains, reverse=True, key=lambda domain: self.min_break_dist(domain))
+        self.domains = sorted(self.domains, reverse=True, key=lambda domain: self.min_break_dist(domain))
                 
     
     def get_domains(self, dist_lower_bound):
