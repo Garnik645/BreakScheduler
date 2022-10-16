@@ -60,6 +60,8 @@ def parse_args(argv):
 
 def main(args):
     cons = DomainConstructor(get_span_json(args.data_path, args.span_id), args.start_time, args.end_time)
+    cons.remove_invalid_domains()
+    cons.sort_domains()
     
     initial_condition = 2 * BreakTemplateParser.HOUR_TO_SECONDS
     result = []
