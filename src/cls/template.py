@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class BreakInterval:
     begin: int
     end: int
-    
+
     @staticmethod
     def get_time(sec):
         hours = str(sec // BreakTemplateParser.HOUR_TO_SECONDS)
@@ -13,7 +13,7 @@ class BreakInterval:
         minutes = str(rest // BreakTemplateParser.MINUTE_TO_SECONDS)
         seconds = str(sec % BreakTemplateParser.MINUTE_TO_SECONDS)
         return f"{hours.zfill(2)}:{minutes.zfill(2)}:{seconds.zfill(2)}"
-    
+
     def __repr__(self):
         return f"Break({self.get_time(self.begin)}, {self.get_time(self.end)})"
 
@@ -21,17 +21,17 @@ class BreakInterval:
 class BreakTemplateParser:
     HOUR_TO_SECONDS = 3600
     MINUTE_TO_SECONDS = 60
-    
+
     @staticmethod
     def is_valid_interval(interval, class_start_in_seconds, class_end_in_seconds):
         return interval.begin > class_start_in_seconds and interval.end < class_end_in_seconds
-    
+
     @classmethod
     def convert_time_to_seconds(cls, time):
         split_time = time.split(':')
         return int(split_time[0]) * cls.HOUR_TO_SECONDS + \
-        int(split_time[1]) * cls.MINUTE_TO_SECONDS + int(split_time[2])
-    
+            int(split_time[1]) * cls.MINUTE_TO_SECONDS + int(split_time[2])
+
     def __init__(self, template_json, class_begin_time, class_end_time):
         self.class_start_in_seconds = self.convert_time_to_seconds(class_begin_time)
         self.class_end_in_seconds = self.convert_time_to_seconds(class_end_time)

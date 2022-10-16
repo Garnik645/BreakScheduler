@@ -18,7 +18,7 @@ class DomainConstructor:
         for i in range(0, len(domain) - 1):
             if domain[i].end > domain[i + 1].begin:
                 return False
-        return True    
+        return True
 
     @staticmethod
     def min_break_dist(domain):
@@ -31,11 +31,10 @@ class DomainConstructor:
         for i, domain in enumerate(self.domains):
             if not self.is_domain_valid(domain):
                 del self.domains[i]
-                
+
     def sort_domains(self):
         self.domains = sorted(self.domains, reverse=True, key=lambda domain: self.min_break_dist(domain))
-                
-    
+
     def get_domains(self, dist_lower_bound):
         result = []
         for domain in self.domains:
