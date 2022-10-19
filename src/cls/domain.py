@@ -1,4 +1,3 @@
-import enum
 from cls.template import BreakTemplateParser
 from itertools import product
 
