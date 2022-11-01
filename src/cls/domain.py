@@ -7,15 +7,18 @@ class DomainConstructor:
         templates = []
         for template_json in span_json:
             parser = BreakTemplateParser(template_json, class_begin_time, class_end_time)
-            templates.append(parser.construct_valid_interval_list())
-        self.domains = list(product(*templates))
-        for i, domain in enumerate(self.domains):
-            self.domains[i] = sorted(domain)
+            valid_interval_list = parser.construct_valid_interval_list()
+            if valid_interval_list:
+                templates.append(valid_interval_list)
+
+        self.domain = list(product(*templates))
+        for i, value in enumerate(self.domain):
+            self.domain[i] = sorted(value)
 
     @staticmethod
-    def is_domain_valid(domain):
-        for i in range(0, len(domain) - 1):
-            if domain[i].end > domain[i + 1].begin:
+    def is_domain_valid(value):
+        for i in range(0, len(value) - 1):
+            if value[i].end > value[i + 1].begin:
                 return False
         return True
 
@@ -26,17 +29,17 @@ class DomainConstructor:
             result = min(result, domain[i + 1].begin - domain[i].end)
         return result
 
-    def remove_invalid_domains(self):
-        for i, domain in enumerate(self.domains):
-            if not self.is_domain_valid(domain):
-                del self.domains[i]
+    def remove_invalid_values_from_domain(self):
+        for i, value in enumerate(self.domain):
+            if not self.is_domain_valid(value):
+                del self.domain[i]
 
-    def sort_domains(self):
-        self.domains = sorted(self.domains, reverse=True, key=lambda domain: self.min_break_dist(domain))
+    def sort_domain_values(self):
+        self.domain = sorted(self.domain, reverse=True, key=lambda domain: self.min_break_dist(domain))
 
-    def get_domains(self, dist_lower_bound):
+    def get_domain_values(self, dist_lower_bound):
         result = []
-        for domain in self.domains:
-            if self.min_break_dist(domain) >= dist_lower_bound:
-                result.append(domain)
+        for value in self.domain:
+            if self.min_break_dist(value) >= dist_lower_bound:
+                result.append(value)
         return result

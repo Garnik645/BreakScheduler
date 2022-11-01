@@ -85,7 +85,7 @@
         {
             "id": "8af1d0e6808fb8650180923998d2003e",
             "break_duration": 10,
-            "start_time_type": "RELATIVE_TO_SHIFT_END",
+            "start_time_type": "RELATIVE_TO_CLASS_END",
             "start_times": [
                 "00:10:00"
             ]
@@ -245,7 +245,7 @@
         {
             "id": "8af1d0e6808fb8650180923998d00038",
             "break_duration": 10,
-            "start_time_type": "RELATIVE_TO_SHIFT_END",
+            "start_time_type": "RELATIVE_TO_CLASS_END",
             "start_times": [
                 "00:10:00"
             ]

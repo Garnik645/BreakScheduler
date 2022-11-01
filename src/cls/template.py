@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import date, datetime
 
 
 @dataclass(order=True)
@@ -24,13 +25,13 @@ class BreakTemplateParser:
 
     @staticmethod
     def is_valid_interval(interval, class_start_in_seconds, class_end_in_seconds):
-        return interval.begin > class_start_in_seconds and interval.end < class_end_in_seconds
+        return interval.begin >= class_start_in_seconds and interval.end <= class_end_in_seconds
 
     @classmethod
     def convert_time_to_seconds(cls, time):
-        split_time = time.split(':')
-        return int(split_time[0]) * cls.HOUR_TO_SECONDS + \
-            int(split_time[1]) * cls.MINUTE_TO_SECONDS + int(split_time[2])
+        date_time = datetime.strptime(time, "%H:%M:%S")
+        return date_time.hour * cls.HOUR_TO_SECONDS + date_time.minute * cls.MINUTE_TO_SECONDS + date_time.second
+
 
     def __init__(self, template_json, class_begin_time, class_end_time):
         self.class_start_in_seconds = self.convert_time_to_seconds(class_begin_time)
