@@ -4,8 +4,10 @@ import os
 import re
 import json
 
-from cls.domain import DomainConstructor
-from cls.template import BreakTemplateParser
+from cls import (
+    DomainConstructor,
+    BreakTemplateParser,
+)
 
 
 def get_span_json(data_path, span_id):
