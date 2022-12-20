@@ -4,8 +4,12 @@ import os
 import re
 import json
 
-from cls.domain import DomainConstructor
-from cls.template import BreakTemplateParser
+from datetime import datetime
+
+from cls import (
+    DomainConstructor,
+    BreakTemplateParser,
+)
 
 
 def get_span_json(data_path, span_id):
@@ -15,18 +19,11 @@ def get_span_json(data_path, span_id):
 
 
 def is_time_valid(time_string):
-    if len(time_string) != len("HH:MM:SS"):
+    try:
+        datetime.strptime(time_string, "%H:%M:%S")
+        return True
+    except Exception as e:
         return False
-
-    time_exp = re.compile("[0-2][0-9]:[0-5][0-9]:[0-5][0-9]")
-    if time_exp.match(time_string) is None:
-        return False
-
-    hour = int(time_string[0:2])
-    if hour >= 24:
-        return False
-
-    return True
 
 
 def check_args(args):
@@ -61,13 +58,13 @@ def parse_args(argv):
 
 def main(args):
     cons = DomainConstructor(get_span_json(args.data_path, args.span_id), args.start_time, args.end_time)
-    cons.remove_invalid_domains()
-    cons.sort_domains()
+    cons.remove_invalid_values_from_domain()
+    cons.sort_domain_values()
 
-    initial_condition = 2 * BreakTemplateParser.HOUR_TO_SECONDS
+    initial_condition = BreakTemplateParser.HOUR_TO_SECONDS
     result = []
     while not result and initial_condition >= 0:
-        result = cons.get_domains(initial_condition)
+        result = cons.get_domain_values(initial_condition)
         initial_condition -= 15 * BreakTemplateParser.MINUTE_TO_SECONDS
 
     print(result)
